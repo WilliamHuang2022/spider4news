@@ -66,6 +66,7 @@ def get_html(url,botton_css,timeout=60,device=None):
                     print('mouse wheel')
                     page.wait_for_timeout(1000)
                     if page.content()==html_old:
+                        print('no more new information')
                         break
                     else:
                         html_old=page.content()
