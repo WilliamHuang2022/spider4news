@@ -60,8 +60,19 @@ def get_html(url,botton_css,timeout=60,device=None):
                     continue
             except:
                 # save_html(html_old,webdite)
-                print('no botton')
-                break
+                try:
+                    page.wait_for_timeout(1000)
+                    page.mouse.wheel(0,7000)
+                    print('mouse wheel')
+                    page.wait_for_timeout(1000)
+                    if page.content()==html_old:
+                        break
+                    else:
+                        html_old=page.content()
+                        continue
+                except:
+                    print('no botton and stop')
+                    break
     return html_old
 
 
