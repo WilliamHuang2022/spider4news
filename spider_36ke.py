@@ -34,10 +34,32 @@ def parse_date(html):
 
 def parse_html(html_mobile):
     bs=BeautifulSoup(html_mobile,'html.parser')
-    time_list=[ele.select('div[class="left-time"]')[0].string for ele in bs.select('.item_datetime')]
-    title_list=[ele.h2.string for ele in bs.select('.item_datetime')]
-    summary_list=[ele.p.span.string for ele in bs.select('.item_datetime')]
-    url_list=[ele.a.attrs['href'] if ele.a.attrs['class']==['article-link'] else '' for ele in bs.select('.item_datetime')]
+    time_list=[]
+    title_list=[]
+    summary_list=[]
+    url_list=[]
+
+    for ele in bs.select('.item_datetime'):
+        try:
+            time_list.append(ele.select('div[class="left-time"]')[0].string)
+        except:
+            continue
+        try:
+            title_list.append(ele.h2.string)
+        except:
+            title_list.append('')
+        try:
+            summary_list.append(ele.p.span.string)
+        except:
+            summary_list.append('')
+        try:
+            url_list.append(ele.a.attrs['href'] if ele.a.attrs['class']==['article-link'] else '')
+        except:
+            url_list.append('')
+    # time_list=[ele.select('div[class="left-time"]')[0].string for ele in bs.select('.item_datetime')]
+    # title_list=[ele.h2.string for ele in bs.select('.item_datetime')]
+    # summary_list=[ele.p.span.string for ele in bs.select('.item_datetime')]
+    # url_list=[ele.a.attrs['href'] if ele.a.attrs['class']==['article-link'] else '' for ele in bs.select('.item_datetime')]
 
     times,titles,urls,summarys=sep_list(time_list,title_list,url_list,summary_list)# [[],[]]
 
