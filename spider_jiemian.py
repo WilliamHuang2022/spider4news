@@ -41,17 +41,35 @@ def parse_time(html):
 def parse_html(html):
     # 将html中的时间戳、标题、总结、url进行解析
     bs=BeautifulSoup(html,'html.parser')
+    time_list=[]
+    title_list=[]
+    summary_list=[]
+    url_list=[]
+    for ele in bs.select("li[class='']"):
+        try:
+            time_list.append(ele.select(".columns-right-center__newsflash-date-node")[0].string)
+        except:
+            continue
+        try:
+            title_list.append(ele.h4.string)
+        except:
+            title_list.append('')
+        try:
+            summary_list.append(ele.select('.columns-right-center__newsflash-content__summary')[0].string)
+        except:
+            summary_list.append('')
+        try:
+            url_list.append(ele.select('.logStore')[0].attrs['href'])
+        except:
+            url_list.append('')
 
-    title_list=[ele.string for ele in bs.select("[class='logStore']")]
-    url_list=[ele.attrs['href'] for ele in bs.select("[class='logStore']")]
+    # title_list=[ele.string for ele in bs.select("[class='logStore']")]
+    # url_list=[ele.attrs['href'] for ele in bs.select("[class='logStore']")]
 
-    time_list=[ele.string for ele in bs.select('.columns-right-center__newsflash-date-node')]
-    summary_list=[ele.text for ele in bs.select(".columns-right-center__newsflash-content__summary")]
+    # time_list=[ele.string for ele in bs.select('.columns-right-center__newsflash-date-node')]
+    # summary_list=[ele.text for ele in bs.select(".columns-right-center__newsflash-content__summary")]
     times,titles,urls,summarys=sep_list(time_list,title_list,url_list,summary_list)# [[],[]]
-
-    len_list=[len(title_list),len(url_list),len(time_list),len(summary_list)]
-    if max(len_list)!=min(len_list):
-        raise ValueError('解析html得出的多个列表长度不一')
+    
     return times,titles,urls,summarys
 
 
@@ -73,11 +91,19 @@ def html2dic(html):
 
 
 if __name__=="__main__":
-    # with open('./html/html_2024_10_06 10_34_21.txt','r',encoding='utf-8') as f1:
+    # with open('./html/jiemian_2024_10_06 10_34_21.txt','r',encoding='utf-8') as f1:
     # # with open('./html/html_2024_10_06 17_21_49.txt','r',encoding='utf-8') as f1:
     #     html=f1.read()
 
     html=get_html('https://www.jiemian.com/lists/4.html','body > div.pjax-wrapper > div > div.middle-content > div > div > div > div.columns-right-view > div.columns-right-center > div > div.load-view > span')
-    save_html(html,'jiemian')
-    dic=html2dic(html)
-    save_dic(dic,'jiemian')
+    # save_html(html,'jiemian')
+    # dic=html2dic(html)
+    # save_dic(dic,'jiemian')
+    bs=BeautifulSoup(html,'html.parser')
+    for ele in bs.select("li[class='']"):
+        print(ele)
+        print(ele.select(".columns-right-center__newsflash-date-node")[0].string) # time
+        print(ele.h4.string) # title
+        print(ele.select('.columns-right-center__newsflash-content__summary')[0].string)# summary
+        print(ele.select('.logStore')[0].attrs['href']) # url
+        break
