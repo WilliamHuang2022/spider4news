@@ -2,6 +2,34 @@ import datetime,os
 import json,time
 from playwright.sync_api import sync_playwright
 
+def merge_jsons(filepath):
+    #将不同平台的新闻json按日期合并
+    file_list=scan_files(filepath)
+    date_list=set()
+    sep='\\'
+    for filename in file_list:
+        date=filename.split(sep)[1].split('_')[1].split('.')[0]
+        date_list.add(date)
+    date_list=list(date_list)
+    for date in date_list:
+        candidate_file=[]
+        for filename in file_list:#找出同一天的新闻json
+            if date in filename:
+                candidate_file.append(filename)
+        total_dic={}
+        for filename in candidate_file:#将所有同一天的json合并为total_dic
+            with open(filename,'r',encoding='utf-8') as f1:
+                dic=json.load(f1)
+            if total_dic=={}:
+                total_dic=dic
+            else:
+                total_dic=merge_dic(total_dic,dic)
+        with open(f'./total_news/{date}.json','w',encoding='utf-8') as f1:
+            file=json.dumps(total_dic,ensure_ascii=False,indent=True)
+            f1.write(file)
+        
+
+
 def pack(date,time_list,title_list,url_list,summary_list):
     #将一天的内容列表进行组装
     dic={}
@@ -19,7 +47,20 @@ def pack(date,time_list,title_list,url_list,summary_list):
             dic[f"{date}_{time_list[i]}"]=[subdic]
     return dic
 
-
+def scan_files(filepath):
+    # 获取该路径下的所有文件
+    files = os.listdir(filepath)
+    file_list=[]
+    # 遍历所有文件
+    for file in files:
+        # 把文件路径和文件名结合起来
+        file_d = os.path.join(filepath, file)
+        # 判断该文件是单个文件还是文件夹
+        if os.path.isdir(file_d):  # 如果是文件夹则递归调用 scanDir() 函数
+            pass
+        else:
+            file_list.append(file_d)
+    return file_list
 
 def get_html(url,botton_css,timeout=60,device=None):
     # device表示模拟哪个设备，可以是'iPhone X'
