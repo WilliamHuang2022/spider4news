@@ -95,7 +95,7 @@ def htmls2jsons(filepath,website):
         file_d = os.path.join(filepath, file)
         # 判断该文件是单个文件还是文件夹
         if os.path.isdir(file_d):  # 如果是文件夹则递归调用 scanDir() 函数
-            filepath(file_d)
+            pass
         else:
             if website in file_d:
                 print("scan file: "+file_d)
@@ -109,10 +109,10 @@ def htmls2jsons(filepath,website):
 
 if __name__=='__main__':
     #需要用移动端的才可以获取到具体时间戳
-    html_mobile=get_html('https://www.36kr.com/newsflashes','.kr-loading-more-button-default',60,device='iPhone X')# 起码要刷够60秒才能将最近的三天的新闻都凑够，然后利用前天的日期作为锚来获取date
+    # html_mobile=get_html('https://www.36kr.com/newsflashes','.kr-loading-more-button-default',60,device='iPhone X')# 起码要刷够60秒才能将最近的三天的新闻都凑够，然后利用前天的日期作为锚来获取date
 
-    save_html(html_mobile,'36ke')
-    dic=html2dic(html_mobile)
-    save_dic(dic,'36ke')
-    # htmls2jsons('./html','36ke')
+    # save_html(html_mobile,'36ke')
+    # dic=html2dic(html_mobile)
+    # save_dic(dic,'36ke')
+    htmls2jsons('./html','36ke')
     

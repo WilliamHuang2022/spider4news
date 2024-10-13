@@ -117,7 +117,7 @@ def htmls2jsons(filepath,website):
         file_d = os.path.join(filepath, file)
         # 判断该文件是单个文件还是文件夹
         if os.path.isdir(file_d):  # 如果是文件夹则递归调用 scanDir() 函数
-            filepath(file_d)
+            pass
         else:
             if website in file_d:
                 print("scan file: "+file_d)
