@@ -36,7 +36,27 @@ def parse_time(html):
         dates.append(f"{year_lis[i]}-{month_lis[i]}-{day_lis[i]}")
     return dates
 
-
+def htmls2jsons(filepath,website):
+    # 获取该路径下的所有文件
+    files = os.listdir(filepath)
+    
+    # 遍历所有文件
+    for file in files:
+        # 把文件路径和文件名结合起来
+        file_d = os.path.join(filepath, file)
+        # 判断该文件是单个文件还是文件夹
+        if os.path.isdir(file_d):  # 如果是文件夹则递归调用 scanDir() 函数
+            filepath(file_d)
+        else:
+            print("scan file: "+file_d)
+            if website in file_d:
+                with open(file_d,'r',encoding='utf-8') as f1:
+                    html=f1.read()
+                try:
+                    dic=html2dic(html)
+                    save_dic(dic,website)
+                except:
+                    print('有一个不满足3天条件：'+file_d)
 
 def parse_html(html):
     # 将html中的时间戳、标题、总结、url进行解析
@@ -87,7 +107,28 @@ def html2dic(html):
         dic[date]=new_dic
     return dic
 
-
+def htmls2jsons(filepath,website):
+    # 获取该路径下的所有文件
+    files = os.listdir(filepath)
+    
+    # 遍历所有文件
+    for file in files:
+        # 把文件路径和文件名结合起来
+        file_d = os.path.join(filepath, file)
+        # 判断该文件是单个文件还是文件夹
+        if os.path.isdir(file_d):  # 如果是文件夹则递归调用 scanDir() 函数
+            filepath(file_d)
+        else:
+            if website in file_d:
+                print("scan file: "+file_d)
+                with open(file_d,'r',encoding='utf-8') as f1:
+                    html=f1.read()
+                try:
+                    dic=html2dic(html)
+                    save_dic(dic,website)
+                    
+                except:
+                    print('有一个失败：'+file_d)
 
 
 if __name__=="__main__":
@@ -96,14 +137,8 @@ if __name__=="__main__":
     #     html=f1.read()
 
     html=get_html('https://www.jiemian.com/lists/4.html','body > div.pjax-wrapper > div > div.middle-content > div > div > div > div.columns-right-view > div.columns-right-center > div > div.load-view > span')
-    # save_html(html,'jiemian')
-    # dic=html2dic(html)
-    # save_dic(dic,'jiemian')
-    bs=BeautifulSoup(html,'html.parser')
-    for ele in bs.select("li[class='']"):
-        print(ele)
-        print(ele.select(".columns-right-center__newsflash-date-node")[0].string) # time
-        print(ele.h4.string) # title
-        print(ele.select('.columns-right-center__newsflash-content__summary')[0].string)# summary
-        print(ele.select('.logStore')[0].attrs['href']) # url
-        break
+    save_html(html,'jiemian')
+    dic=html2dic(html)
+    save_dic(dic,'jiemian')
+
+    # htmls2jsons('./html','jiemian')

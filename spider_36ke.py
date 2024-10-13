@@ -7,6 +7,8 @@ def parse_date(html):
     #按前天的日期作为锚
     bs=BeautifulSoup(html,'html.parser')
     date_list=[ele.string for ele in bs.select('.date-bg')]
+    if len(date_list)<3:
+        raise ValueError('获取的日期不够3天，无法准确定位日期')
     day_by=date_list[2]#前天的日期 如10.04
     day_by_list=[int(ele) for ele in day_by.split('.')]
     if day_by_list[0]==12:#就是当前天是29号的时候比较麻烦
@@ -79,17 +81,34 @@ def html2dic(html):
         dic[date]=new_dic
     return dic
 
+def htmls2jsons(filepath,website):
+    # 获取该路径下的所有文件
+    files = os.listdir(filepath)
+    
+    # 遍历所有文件
+    for file in files:
+        # 把文件路径和文件名结合起来
+        file_d = os.path.join(filepath, file)
+        # 判断该文件是单个文件还是文件夹
+        if os.path.isdir(file_d):  # 如果是文件夹则递归调用 scanDir() 函数
+            filepath(file_d)
+        else:
+            if website in file_d:
+                print("scan file: "+file_d)
+                with open(file_d,'r',encoding='utf-8') as f1:
+                    html=f1.read()
+                try:
+                    dic=html2dic(html)
+                    save_dic(dic,website)
+                except:
+                    print('有一个不满足3天条件：'+file_d)
+
 if __name__=='__main__':
     #需要用移动端的才可以获取到具体时间戳
-    # html_mobile=get_html('https://www.36kr.com/newsflashes','.kr-loading-more-button-default',60,device='iPhone X')# 起码要刷够30秒才能将最近的三天的新闻都凑够，然后利用前天的日期作为锚来获取date
-    
-    # with open('36ke_pc.txt','r',encoding='utf-8') as f1:
-    #     html_pc=f1.read()
-    # with open('36ke_mobile.txt','r',encoding='utf-8') as f2:
-    #     html_mobile=f2.read()
-    with open('./html/36ke_2024_10_07 12_01_11.txt','r',encoding='utf-8') as f1:
-        html_mobile=f1.read()
+    html_mobile=get_html('https://www.36kr.com/newsflashes','.kr-loading-more-button-default',60,device='iPhone X')# 起码要刷够60秒才能将最近的三天的新闻都凑够，然后利用前天的日期作为锚来获取date
 
     save_html(html_mobile,'36ke')
     dic=html2dic(html_mobile)
     save_dic(dic,'36ke')
+    # htmls2jsons('./html','36ke')
+    
