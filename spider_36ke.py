@@ -51,7 +51,11 @@ def parse_html(html_mobile):
         except:
             title_list.append('')
         try:
-            summary_list.append(ele.p.span.string)
+            summary=ele.p.span.string
+            if summary:
+                summary_list.append(summary)
+            else:
+                summary_list.append('')
         except:
             summary_list.append('')
         try:
