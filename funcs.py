@@ -2,6 +2,22 @@ import datetime,os
 import json,time
 from playwright.sync_api import sync_playwright
 
+def jsons2mds(filepath):
+    file_list=scan_files(filepath)
+    for filename in file_list:
+        text=""
+        with open(filename,'r',encoding='utf-8') as f1:
+            dic=json.load(f1)
+        for time in dic.keys():
+            text+=f"# {time}\n"
+            lis=dic[time]
+            for subdic in lis:
+                text+=f"**{subdic['title']}**\n{subdic['summary']}\n[{subdic['url']}]({subdic['url']})\n"
+        sep='\\'
+        date=filename.split(sep)[1].split('_')[1].split('.')[0]
+        with open(f'./news_md/news_{date}.md','w',encoding='utf-8') as f2:
+            f2.write(text)
+
 def merge_jsons(filepath):
     #将不同平台的新闻json按日期合并
     file_list=scan_files(filepath)
@@ -68,7 +84,7 @@ def get_html(url,botton_css,timeout=60,device=None):
     html_new=""
     with sync_playwright() as p:
         # browser=p.chromium.launch(headless=False)
-        browser = p.chromium.launch(channel="msedge",headless=False)
+        browser = p.chromium.launch(channel="msedge",headless=True)
         if device:
             context = browser.new_context(
             **p.devices[device]
