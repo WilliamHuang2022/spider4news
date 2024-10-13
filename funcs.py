@@ -1,4 +1,4 @@
-import datetime
+import datetime,os
 import json,time
 from playwright.sync_api import sync_playwright
 
@@ -49,7 +49,8 @@ def get_html(url,botton_css,timeout=60,device=None):
             try:
                 botton=page.query_selector(botton_css)
                 botton.click()
-                page.wait_for_timeout(3000)
+                print('press the botton')
+                page.wait_for_timeout(2500)
                 html_new=page.content()
                 if html_old==html_new:
                     # save_html(html_new,webdite)
@@ -75,9 +76,6 @@ def get_html(url,botton_css,timeout=60,device=None):
                     print('no botton and stop')
                     break
     return html_old
-
-
-
 
 
 def save_html(html,website):
@@ -131,7 +129,7 @@ def save_dic(dic,website):
     date_list=list(dic.keys())
     for date in date_list:
         try:#已经存在新闻文件了
-            with open(f'./news/{date}.json','r',encoding='utf-8') as ft:
+            with open(f'./news/{website}_{date}.json','r',encoding='utf-8') as ft:
                 dic_exit=json.load(ft)
             dic_total=merge_dic(dic_exit,dic[date])
             key_list=sorted(list(dic_total.keys()))
@@ -150,3 +148,4 @@ def save_dic(dic,website):
             with open(f'./news/{website}_{date}.json','w',encoding='utf-8') as fe:
                 file=json.dumps(dic_new,ensure_ascii=False,indent=True)
                 fe.write(file)
+
