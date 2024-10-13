@@ -24,7 +24,7 @@ def merge_jsons(filepath):
                 total_dic=dic
             else:
                 total_dic=merge_dic(total_dic,dic)
-        with open(f'./total_news/{date}.json','w',encoding='utf-8') as f1:
+        with open(f'./total_news/news_{date}.json','w',encoding='utf-8') as f1:
             file=json.dumps(total_dic,ensure_ascii=False,indent=True)
             f1.write(file)
         
