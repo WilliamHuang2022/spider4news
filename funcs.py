@@ -119,7 +119,7 @@ def merge_dic(main_dic,dic):
         if key in exist_keys_list:
             for subdic in dic[key]:
                 if subdic not in new_dic[key]:#避免出现重复的新闻
-                    new_dic[key]+=subdic
+                    new_dic[key].append(subdic)
         else:
             new_dic[key]=dic[key]
     return new_dic
