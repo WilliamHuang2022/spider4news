@@ -37,7 +37,7 @@ def parse_html(html):
                 summary=ele_list[3]
             else:
                 title=ele_list[2]
-                summary=ele_list[2]
+                # summary=ele_list[2]
         else: #当天的新闻
             time=ele_list[0]
             time=datetime.datetime.strptime(time,'%H:%M:%S').strftime('%H:%M')
@@ -46,7 +46,7 @@ def parse_html(html):
                 summary=ele_list[2]
             else:
                 title=ele_list[1]
-                summary=ele_list[1]
+                # summary=ele_list[1]
         time_list.append(time)
         title_list.append(title)
         summary_list.append(summary)
