@@ -40,8 +40,11 @@ def merge_jsons(filepath):
                 total_dic=dic
             else:
                 total_dic=merge_dic(total_dic,dic)
+        total_dic_sorted={}
+        for time in sorted(total_dic.keys()):
+            total_dic_sorted[time]=total_dic[time]
         with open(f'./total_news/news_{date}.json','w',encoding='utf-8') as f1:
-            file=json.dumps(total_dic,ensure_ascii=False,indent=True)
+            file=json.dumps(total_dic_sorted,ensure_ascii=False,indent=True)
             f1.write(file)
         
 
